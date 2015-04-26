@@ -1,16 +1,20 @@
--- xmonad config used by Vic Fryzel
--- Author: Vic Fryzel
--- http://github.com/vicfryzel/xmonad-config
+-- AngusP's XMonad Config
 
 import System.IO
 import System.Exit
 import XMonad
+import XMonad.Actions.CycleWS
+import XMonad.Actions.CopyWindow
+import XMonad.Actions.MouseGestures
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.Script
 import XMonad.Hooks.SetWMName
 import XMonad.Layout.Fullscreen
+import XMonad.Layout.MultiToggle
 import XMonad.Layout.NoBorders
+import XMonad.Layout.Reflect
 import XMonad.Layout.Spiral
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
@@ -32,7 +36,7 @@ myTerminal = "/usr/bin/gnome-terminal"
 -- Workspaces
 -- The default number of workspaces (virtual screens) and their names.
 --
-myWorkspaces = ["1:term","2:web","3:code","4:vm","5:media"] ++ map show [6..9]
+myWorkspaces = map show [1..9]
 
 
 ------------------------------------------------------------------------
@@ -50,17 +54,12 @@ myWorkspaces = ["1:term","2:web","3:code","4:vm","5:media"] ++ map show [6..9]
 -- 'className' and 'resource' are used below.
 --
 myManageHook = composeAll
-    [ className =? "Chromium"       --> doShift "2:web"
-    , className =? "Google-chrome"  --> doShift "2:web"
-    , resource  =? "desktop_window" --> doIgnore
-    , className =? "Galculator"     --> doFloat
-    , className =? "Steam"          --> doFloat
-    , className =? "Gimp"           --> doFloat
-    , resource  =? "gpicview"       --> doFloat
-    , className =? "MPlayer"        --> doFloat
-    , className =? "VirtualBox"     --> doShift "4:vm"
-    , className =? "Xchat"          --> doShift "5:media"
-    , className =? "stalonetray"    --> doIgnore
+    [ resource  =? "desktop_window"   --> doIgnore
+    , className =? "stalonetray"      --> doIgnore
+    , className =? "plank"            --> doIgnore
+      -- Below gets chrome_app_list to properly float
+    , (stringProperty "WM_WINDOW_ROLE") =? "bubble"  --> doFloat
+    , (stringProperty "WM_WINDOW_ROLE") =? "pop-up"  --> doFloat
     , isFullscreen --> (doF W.focusDown <+> doFullFloat)]
 
 
@@ -77,9 +76,11 @@ myManageHook = composeAll
 myLayout = avoidStruts (
     Tall 1 (3/100) (1/2) |||
     Mirror (Tall 1 (3/100) (1/2)) |||
-    tabbed shrinkText tabConfig |||
-    Full |||
-    spiral (6/7)) |||
+    tabbedBottom shrinkText myTabConfig |||
+    -- simpleTabbedBottom |||
+    Full ) |||
+    --spiral (6/7)) |||
+    tabbedBottom shrinkText myTabConfig |||
     noBorders (fullscreenFull Full)
 
 
@@ -87,21 +88,21 @@ myLayout = avoidStruts (
 -- Colors and borders
 -- Currently based on the ir_black theme.
 --
-myNormalBorderColor  = "#7c7c7c"
-myFocusedBorderColor = "#ffb6b0"
+myNormalBorderColor  = "#181818"
+myFocusedBorderColor = "#333333"
 
 -- Colors for text and backgrounds of each tab when in "Tabbed" layout.
-tabConfig = defaultTheme {
-    activeBorderColor = "#7C7C7C",
-    activeTextColor = "#CEFFAC",
-    activeColor = "#000000",
-    inactiveBorderColor = "#7C7C7C",
-    inactiveTextColor = "#EEEEEE",
+myTabConfig = defaultTheme {
+    activeBorderColor = "#333333",
+    activeTextColor = "#FF8500",
+    activeColor = "#333333",
+    inactiveBorderColor = "#000000",
+    inactiveTextColor = "#DDDDDD",
     inactiveColor = "#000000"
 }
 
 -- Color of current window title in xmobar.
-xmobarTitleColor = "#FFB6B0"
+xmobarTitleColor = "#DDD"
 
 -- Color of current workspace in xmobar.
 xmobarCurrentWorkspaceColor = "#CEFFAC"
@@ -116,9 +117,9 @@ myBorderWidth = 1
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
 -- ("right alt"), which does not conflict with emacs keybindings. The
--- "windows key" is usually mod4Mask.
+-- "super key" is usually mod4Mask.
 --
-myModMask = mod1Mask
+myModMask = mod4Mask
 
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   ----------------------------------------------------------------------
@@ -133,10 +134,10 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask .|. controlMask, xK_l),
      spawn "xscreensaver-command -lock")
 
-  -- Launch dmenu via yeganesh.
+  -- Launch dmenu.
   -- Use this to launch programs without a key binding.
   , ((modMask, xK_p),
-     spawn "dmenu-with-yeganesh")
+     spawn "dmenu_run")
 
   -- Take a screenshot in select mode.
   -- After pressing this key binding, click a window, or draw a rectangle with
@@ -149,38 +150,63 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask .|. controlMask .|. shiftMask, xK_p),
      spawn "screenshot")
 
-  -- Fetch a single use password.
-  , ((modMask .|. shiftMask, xK_o),
-     spawn "fetchotp -x")
+  , ((mod1Mask, xK_space),
+     spawn "google-chrome-beta --show-app-list")
 
+  -- MonBrightnessUp
+  , ((0, 0x1008FF02),
+     spawn "xbacklight -inc 20")
 
-  -- Mute volume.
-  , ((modMask .|. controlMask, xK_m),
+  -- MonBrightnessDown 0x1008FF02
+  , ((0, 0x1008FF03),
+     spawn "xbacklight -dec 20")
+
+  -- Audio mute toggle
+  , ((0, 0x1008FF12),
      spawn "amixer -q set Master toggle")
 
-  -- Decrease volume.
-  , ((modMask .|. controlMask, xK_j),
-     spawn "amixer -q set Master 10%-")
-
-  -- Increase volume.
-  , ((modMask .|. controlMask, xK_k),
-     spawn "amixer -q set Master 10%+")
-
+  -- Audio Vol+
+  , ((0, 0x1008FF13),
+     spawn "amixer -q set Master 5%+")
+    
+  -- Audio Vol-
+  , ((0, 0x1008FF11),
+     spawn "amixer -q set Master 5%-")
+    
   -- Audio previous.
-  , ((0, 0x1008FF16),
-     spawn "")
+  --, ((0, 0x1008FF16),
+  --   spawn "")
 
   -- Play/pause.
-  , ((0, 0x1008FF14),
-     spawn "")
+  --, ((0, 0x1008FF14),
+  --   spawn "")
 
   -- Audio next.
-  , ((0, 0x1008FF17),
-     spawn "")
+  --, ((0, 0x1008FF17),
+  --   spawn "")
 
   -- Eject CD tray.
   , ((0, 0x1008FF2C),
-     spawn "eject -T")
+     spawn "eject")
+
+  -- Cycle workspaces left and right
+  , ((controlMask .|. mod1Mask, xK_Right),
+     nextWS)
+
+  , ((controlMask .|. mod1Mask, xK_Left),
+     prevWS)
+
+  , ((controlMask .|. mod1Mask .|. shiftMask, xK_Right),
+     shiftToNext >> nextWS)
+
+  , ((controlMask .|. mod1Mask .|. shiftMask, xK_Left),
+     shiftToPrev >> prevWS)
+
+  , ((modMask, xK_v ),
+     windows copyToAll)
+
+  , ((modMask .|. shiftMask, xK_v ),
+     killAllOtherCopies)
 
   --------------------------------------------------------------------
   -- "Standard" xmonad key bindings
@@ -260,6 +286,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Restart xmonad.
   , ((modMask, xK_q),
      restart "xmonad" True)
+
   ]
   ++
 
@@ -268,13 +295,13 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   [((m .|. modMask, k), windows $ f i)
       | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
       , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-  ++
+  -- ++
 
   -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
   -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
-  [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
-      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-      , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+  -- [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
+  --    | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+  --    , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
 
 ------------------------------------------------------------------------
@@ -337,7 +364,8 @@ main = do
           , ppSep = "   "
       }
       , manageHook = manageDocks <+> myManageHook
-      , startupHook = setWMName "LG3D"
+      , startupHook = spawn "feh --bg-scale $HOME/.wall.jpg&"
+
   }
 
 
