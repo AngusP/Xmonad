@@ -9,7 +9,7 @@ if [ "$CHARGESTAT" == "+" ]; then
 elif [ "$LEVEL" -lt "20" ]; then
     echo "Batt:<fc=#FF8600>"$LEVEL"</fc>%!"
 elif [ "$LEVEL" -ge "98" ]; then
-    echo "Batt:<fc=#8CC4FF>"$LEVEL"</fc>%"
+    echo " Batt:<fc=#8CC4FF>"$LEVEL"</fc>%"
 else
     echo "Batt:<fc=#CCCC00>"$LEVEL"</fc>%"
 fi
