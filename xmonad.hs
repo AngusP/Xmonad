@@ -6,6 +6,7 @@ import XMonad
 import XMonad.Actions.CycleWS
 import XMonad.Actions.CopyWindow
 import XMonad.Actions.MouseGestures
+import XMonad.Actions.SpawnOn
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -155,11 +156,11 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
   -- MonBrightnessUp
   , ((0, 0x1008FF02),
-     spawn "xbacklight -inc 20")
+     spawn "xbacklight -inc 10")
 
   -- MonBrightnessDown 0x1008FF02
   , ((0, 0x1008FF03),
-     spawn "xbacklight -dec 20")
+     spawn "xbacklight -dec 5")
 
   -- Audio mute toggle
   , ((0, 0x1008FF12),
@@ -347,8 +348,11 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 -- with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
 -- per-workspace layout choices.
 --
--- By default, do nothing.
-myStartupHook = return ()
+myStartupHook :: X ()
+myStartupHook = do
+  spawn "xscreensaver -no-spash"
+  spawn "feh --bg-scale $HOME/.wall.jpg&"
+  spawnOn "1" "google-chrome-beta"
 
 
 ------------------------------------------------------------------------
@@ -364,7 +368,7 @@ main = do
           , ppSep = "   "
       }
       , manageHook = manageDocks <+> myManageHook
-      , startupHook = spawn "feh --bg-scale $HOME/.wall.jpg&"
+      , startupHook = myStartupHook
 
   }
 
