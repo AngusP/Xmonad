@@ -131,6 +131,14 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   [ ((modMask .|. shiftMask, xK_Return),
      spawn $ XMonad.terminal conf)
 
+  -- Start EMACS
+  , ((modMask, xK_e),
+     spawn "emacs")
+
+  -- Start Browser
+  , ((modMask, xK_i),
+     spawn "google-chrome-beta")
+    
   -- Lock the screen using xscreensaver.
   , ((modMask .|. controlMask, xK_l),
      spawn "xscreensaver-command -lock")
@@ -352,7 +360,6 @@ myStartupHook :: X ()
 myStartupHook = do
   spawn "xscreensaver -no-spash"
   spawn "feh --bg-scale $HOME/.wall.jpg&"
-  spawnOn "1" "google-chrome-beta"
 
 
 ------------------------------------------------------------------------
