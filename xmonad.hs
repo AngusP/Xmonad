@@ -358,7 +358,7 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 --
 myStartupHook :: X ()
 myStartupHook = do
-  spawn "xscreensaver -no-spash"
+  spawn "xscreensaver &"
   spawn "feh --bg-scale $HOME/.wall.jpg&"
 
 
