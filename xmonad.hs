@@ -135,6 +135,14 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask, xK_e),
      spawn "emacs")
 
+  -- Start Blender
+  , ((modMask, xK_b),
+     spawn "blender")
+
+  -- Start GIMP
+  , ((modMask, xK_g),
+     spawn "gimp")
+    
   -- Start Browser
   , ((modMask, xK_i),
      spawn "google-chrome-beta")
