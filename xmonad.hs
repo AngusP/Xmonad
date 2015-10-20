@@ -143,9 +143,13 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask, xK_g),
      spawn "gimp")
     
-  -- Start Browser
+  -- Start Chrome Browser
   , ((modMask, xK_i),
      spawn "google-chrome-beta")
+    
+  -- Start Vivaldi Browser
+  , ((modMask, xK_v),
+     spawn "vivaldi")
     
   -- Lock the screen using xscreensaver.
   , ((modMask .|. controlMask, xK_l),
@@ -159,13 +163,13 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Take a screenshot in select mode.
   -- After pressing this key binding, click a window, or draw a rectangle with
   -- the mouse.
-  , ((modMask .|. shiftMask, xK_p),
-     spawn "select-screenshot")
+  --, ((modMask .|. shiftMask, xK_p),
+  --   spawn "select-screenshot")
 
   -- Take full screenshot in multi-head mode.
   -- That is, take a screenshot of everything you see.
-  , ((modMask .|. controlMask .|. shiftMask, xK_p),
-     spawn "screenshot")
+  --, ((modMask .|. controlMask .|. shiftMask, xK_p),
+  --   spawn "screenshot")
 
   , ((mod1Mask, xK_space),
      spawn "google-chrome-beta --show-app-list")
@@ -213,16 +217,24 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((controlMask .|. mod1Mask, xK_Left),
      prevWS)
 
+  -- Move focus to the next window with workspace-like keys
+  , ((controlMask .|. mod1Mask, xK_Down),
+     windows W.focusDown)
+
+  -- Move focus to the previous window with workspace-like keys
+  , ((controlMask .|. mod1Mask, xK_Up),
+     windows W.focusUp  )
+    
   , ((controlMask .|. mod1Mask .|. shiftMask, xK_Right),
      shiftToNext >> nextWS)
 
   , ((controlMask .|. mod1Mask .|. shiftMask, xK_Left),
      shiftToPrev >> prevWS)
 
-  , ((modMask, xK_v ),
+  , ((modMask, xK_d ),
      windows copyToAll)
 
-  , ((modMask .|. shiftMask, xK_v ),
+  , ((modMask .|. shiftMask, xK_d ),
      killAllOtherCopies)
 
   --------------------------------------------------------------------
@@ -368,6 +380,7 @@ myStartupHook :: X ()
 myStartupHook = do
   spawn "xscreensaver &"
   spawn "feh --bg-scale $HOME/.wall.jpg&"
+  spawn "xsetroot -cursor_name left_ptr"
 
 
 ------------------------------------------------------------------------
