@@ -14,7 +14,7 @@ Config {
                  "-l","#8CC4FF","-n","#CCCC00"] 15,
         Run Network "wlp8s0" ["-t","Net:<rx>rx,<tx>tx","-H","500","-L","20",
                               "-h","#FF8500","-l","#8CC4FF","-n","#CCCC00"] 10,
-        Run Date "%a %_d %b   %H:%M" "date" 10,
+        Run Date "%a    %Y-%m-%_d    %b   %H:%M" "date" 10,
         Run Com "/bin/sh" ["-c","~/.xmonad/battscript.sh"] "battery" 20,
         Run Com "/bin/sh" ["-c","~/.xmonad/volscript.sh"] "vol" 5,
         Run Com "/bin/sh" ["-c","~/.xmonad/wifiscript.sh"] "radio" 20,
