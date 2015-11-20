@@ -79,8 +79,8 @@ myLayout = avoidStruts (
     Mirror (Tall 1 (3/100) (1/2)) |||
     tabbedBottom shrinkText myTabConfig |||
     -- simpleTabbedBottom |||
-    Full ) |||
-    --spiral (6/7)) |||
+    Full |||
+    spiral (6/7)) |||
     tabbedBottom shrinkText myTabConfig |||
     noBorders (fullscreenFull Full)
 
@@ -145,7 +145,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     
   -- Start Chrome Browser
   , ((modMask, xK_i),
-     spawn "google-chrome-beta")
+     spawn "google-chrome")
     
   -- Start Vivaldi Browser
   , ((modMask, xK_v),
@@ -172,7 +172,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   --   spawn "screenshot")
 
   , ((mod1Mask, xK_space),
-     spawn "google-chrome-beta --show-app-list")
+     spawn "google-chrome --show-app-list")
 
   -- MonBrightnessUp
   , ((0, 0x1008FF02),
@@ -183,15 +183,15 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
      spawn "xbacklight -dec 5")
 
   -- Audio mute toggle
-  , ((0, 0x1008FF12),
+  , ((modMask, xK_numbersign ),
      spawn "amixer -q set Master toggle")
 
   -- Audio Vol+
-  , ((0, 0x1008FF13),
+  , ((modMask, xK_bracketright ),
      spawn "amixer -q set Master 5%+")
     
   -- Audio Vol-
-  , ((0, 0x1008FF11),
+  , ((modMask, xK_bracketleft ),
      spawn "amixer -q set Master 5%-")
     
   -- Audio previous.
