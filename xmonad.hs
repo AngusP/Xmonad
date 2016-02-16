@@ -193,6 +193,18 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Audio Vol-
   , ((modMask, xK_bracketleft ),
      spawn "amixer -q set Master 5%-")
+
+  -- Audio mute toggle (media key)
+  , ((0, 0x1008FF12),
+     spawn "amixer -q set Master toggle")
+
+  -- Audio Vol+ (media key)
+  , ((0, 0x1008FF13),
+     spawn "amixer -q set Master 5%+")
+    
+  -- Audio Vol- (media key)
+  , ((0, 0x1008FF11),
+     spawn "amixer -q set Master 5%-")
     
   -- Audio previous.
   --, ((0, 0x1008FF16),
@@ -207,8 +219,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   --   spawn "")
 
   -- Eject CD tray.
-  , ((0, 0x1008FF2C),
-     spawn "eject")
+  --, ((0, 0x1008FF2C),
+  --   spawn "eject")
 
   -- Cycle workspaces left and right
   , ((controlMask .|. mod1Mask, xK_Right),
