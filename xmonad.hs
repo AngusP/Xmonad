@@ -7,7 +7,9 @@ import XMonad.Actions.CycleWS
 import XMonad.Actions.CopyWindow
 import XMonad.Actions.MouseGestures
 import XMonad.Actions.SpawnOn
+import XMonad.Actions.Warp
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.Script
@@ -19,8 +21,12 @@ import XMonad.Layout.Reflect
 import XMonad.Layout.Spiral
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
+import XMonad.Layout.Spacing
+import XMonad.Prompt
+import XMonad.Prompt.RunOrRaise
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
+import XMonad.Util.NamedScratchpad
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
@@ -32,6 +38,10 @@ import qualified Data.Map        as M
 --
 myTerminal = "/usr/bin/gnome-terminal"
 
+scratchpads = [
+  NS "term" "gnome-terminal --role=scratchpad" (role =? "scratchpad") (customFloating $ W.RationalRect (1/12) (1/12) (5/6) (5/6)),
+  NS "irc" "gnome-terminal --role=irc" (role =? "irc") (customFloating $ W.RationalRect (1/12) (1/12) (5/6) (5/6))]
+  where role = stringProperty "WM_WINDOW_ROLE"
 
 ------------------------------------------------------------------------
 -- Workspaces
@@ -57,11 +67,15 @@ myWorkspaces = map show [1..9]
 myManageHook = composeAll
     [ resource  =? "desktop_window"   --> doIgnore
     , className =? "stalonetray"      --> doIgnore
-    , className =? "plank"            --> doIgnore
+    --, (stringProperty "WM_WINDOW_ROLE") =? "scratchpad" --> doFloat
+    , name =? "File Operation Progress" --> doFloat
       -- Below gets chrome_app_list to properly float
-    , (stringProperty "WM_WINDOW_ROLE") =? "bubble"  --> doFloat
-    , (stringProperty "WM_WINDOW_ROLE") =? "pop-up"  --> doFloat
+    , role =? "bubble"  --> doFloat
+    , role =? "pop-up"  --> doFloat
     , isFullscreen --> (doF W.focusDown <+> doFullFloat)]
+  where
+    role = stringProperty "WM_WINDOW_ROLE"
+    name = stringProperty "WM_NAME"
 
 
 ------------------------------------------------------------------------
@@ -156,6 +170,13 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
      spawn "~/.lock.sh")
   --   spawn "xscreensaver-command -lock")
 
+
+  -- show/hide scratchpad
+  , ((0, xK_grave), namedScratchpadAction scratchpads "term")
+
+  , ((0, xK_F1), namedScratchpadAction scratchpads "term")
+
+    
   -- Launch dmenu.
   -- Use this to launch programs without a key binding.
   , ((modMask, xK_p),
