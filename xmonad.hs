@@ -67,11 +67,12 @@ myWorkspaces = map show [1..9]
 myManageHook = composeAll
     [ resource  =? "desktop_window"   --> doIgnore
     , className =? "stalonetray"      --> doIgnore
-    --, (stringProperty "WM_WINDOW_ROLE") =? "scratchpad" --> doFloat
     , name =? "File Operation Progress" --> doFloat
+    , role =? "vlc-video"  --> (doF W.focusDown <+> doFullFloat)
+    , role =? "scratchpad" --> doFloat
       -- Below gets chrome_app_list to properly float
-    , role =? "bubble"  --> doFloat
-    , role =? "pop-up"  --> doFloat
+    , role =? "bubble"     --> doFloat
+    , role =? "pop-up"     --> doFloat
     , isFullscreen --> (doF W.focusDown <+> doFullFloat)]
   where
     role = stringProperty "WM_WINDOW_ROLE"
@@ -172,8 +173,6 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
 
   -- show/hide scratchpad
-  , ((0, xK_grave), namedScratchpadAction scratchpads "term")
-
   , ((0, xK_F1), namedScratchpadAction scratchpads "term")
 
     
@@ -414,6 +413,7 @@ myStartupHook :: X ()
 myStartupHook = do
   spawn "xscreensaver &"
   spawn "feh --bg-scale $HOME/.wall.jpg&"
+  -- spawn "cvlc --video-wallpaper --no-audio --no-video-title-show --loop $HOME/.wall&"
   spawn "xsetroot -cursor_name left_ptr"
 
 
