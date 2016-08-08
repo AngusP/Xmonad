@@ -26,6 +26,7 @@ import XMonad.Prompt
 import XMonad.Prompt.RunOrRaise
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
+import XMonad.Util.Scratchpad
 import XMonad.Util.NamedScratchpad
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -66,10 +67,9 @@ myWorkspaces = map show [1..9]
 --
 myManageHook = composeAll
     [ resource  =? "desktop_window"   --> doIgnore
-    , className =? "stalonetray"      --> doIgnore
     , name =? "File Operation Progress" --> doFloat
     , role =? "vlc-video"  --> (doF W.focusDown <+> doFullFloat)
-    , role =? "scratchpad" --> doFloat
+    , role =? "scratchpad" --> doFloat <+> manageScratchPad
       -- Below gets chrome_app_list to properly float
     , role =? "bubble"     --> doFloat
     , role =? "pop-up"     --> doFloat
@@ -78,6 +78,13 @@ myManageHook = composeAll
     role = stringProperty "WM_WINDOW_ROLE"
     name = stringProperty "WM_NAME"
 
+manageScratchPad :: ManageHook
+manageScratchPad = scratchpadManageHook (W.RationalRect l t w h)
+  where
+    h = 0.1     -- height, 10%
+    w = 1       -- width, 100%
+    t = 1 - h   -- distance from top edge, 90%
+    l = 1 - w   -- distance from left edge, 0%
 
 ------------------------------------------------------------------------
 -- Layouts
@@ -148,7 +155,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
   -- Start EMACS
   , ((modMask, xK_e),
-     spawn "emacs")
+     spawn "emacsclient -c -a emacs")
 
   -- Start Blender
   , ((modMask, xK_b),
@@ -165,6 +172,10 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Start Vivaldi Browser
   , ((modMask, xK_v),
      spawn "vivaldi")
+    
+  -- Start KiCAD
+  , ((modMask, xK_c),
+     spawn "kicad")
     
   -- Lock the screen using xscreensaver.
   , ((modMask .|. controlMask, xK_l),
@@ -415,6 +426,7 @@ myStartupHook = do
   spawn "feh --bg-scale $HOME/.wall.jpg&"
   -- spawn "cvlc --video-wallpaper --no-audio --no-video-title-show --loop $HOME/.wall&"
   spawn "xsetroot -cursor_name left_ptr"
+  spawn "emacs --daemon"
 
 
 ------------------------------------------------------------------------
