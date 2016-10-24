@@ -69,7 +69,7 @@ myManageHook = composeAll
     [ resource  =? "desktop_window"   --> doIgnore
     , name =? "File Operation Progress" --> doFloat
     , role =? "vlc-video"  --> (doF W.focusDown <+> doFullFloat)
-    , role =? "scratchpad" --> doFloat <+> manageScratchPad
+    --, role =? "scratchpad" --> doFloat <+> manageScratchPad
       -- Below gets chrome_app_list to properly float
     , role =? "bubble"     --> doFloat
     , role =? "pop-up"     --> doFloat
@@ -78,13 +78,13 @@ myManageHook = composeAll
     role = stringProperty "WM_WINDOW_ROLE"
     name = stringProperty "WM_NAME"
 
-manageScratchPad :: ManageHook
-manageScratchPad = scratchpadManageHook (W.RationalRect l t w h)
-  where
-    h = 0.1     -- height, 10%
-    w = 1       -- width, 100%
-    t = 1 - h   -- distance from top edge, 90%
-    l = 1 - w   -- distance from left edge, 0%
+--manageScratchPad :: ManageHook
+--manageScratchPad = scratchpadManageHook (W.RationalRect l t w h)
+--  where
+--    h = 0.1     -- height, 10%
+--    w = 1       -- width, 100%
+--    t = 1 - h   -- distance from top edge, 90%
+--    l = 1 - w   -- distance from left edge, 0%
 
 ------------------------------------------------------------------------
 -- Layouts
@@ -441,7 +441,7 @@ main = do
           , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor ""
           , ppSep = "   "
       }
-      , manageHook = manageDocks <+> myManageHook
+      , manageHook = manageDocks <+> myManageHook <+> namedScratchpadManageHook scratchpads
       , startupHook = myStartupHook
 
   }
