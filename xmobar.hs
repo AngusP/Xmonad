@@ -18,10 +18,11 @@ Config {
         Run Com "/bin/sh" ["-c","~/.xmonad/battscript.sh"] "battery" 20,
         Run Com "/bin/sh" ["-c","~/.xmonad/volscript.sh"] "vol" 5,
         Run Com "/bin/sh" ["-c","~/.xmonad/wifiscript.sh"] "radio" 20,
+        Run Com "/bin/bash" ["-c","python ~/.xmonad/userscript.py"] "users" 5,
         Run StdinReader
     ],
     sepChar = "%",
     alignSep = "}{",
-    template = "    %StdinReader% }  %date%  {  %memory%    %cpu%    %wlp8s0%  %radio%    %battery%    %vol%    ",
+    template = "    %StdinReader% }  %date% %users%  {  %memory%    %cpu%    %wlp8s0%  %radio%    %battery%    %vol%    ",
     position = TopW C 100
 }
