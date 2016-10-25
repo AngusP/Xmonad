@@ -19,5 +19,5 @@ for user in users:
         #print(normal_colour + " " + user[-1:][0] + end_colour + "    ", end="")
         pass
     else:
-        print(alert_colour + " " + user[0][:8] + " " + user[-1:][0] + end_colour + "    ", end="")
+        print(alert_colour + "  --  " + user[0][:8] + "@" + user[-1:][0] + end_colour, end="")
 
