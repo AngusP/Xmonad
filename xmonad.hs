@@ -203,8 +203,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   --, ((modMask .|. controlMask .|. shiftMask, xK_p),
   --   spawn "screenshot")
 
-  , ((mod1Mask, xK_space),
-     spawn "google-chrome --show-app-list")
+  , ((mod1Mask, xK_space), namedScratchpadAction scratchpads "term")
 
   -- MonBrightnessUp
   , ((0, 0x1008FF02),
