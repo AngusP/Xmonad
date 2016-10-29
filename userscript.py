@@ -29,5 +29,8 @@ for user in users:
                                    .replace(' ','')
         except Exception:
             actaul_name = user[0]
-        print(alert_colour + " -- " + actual_name[:10] + "@" + user[-1:][0][:9] + end_colour, end="")
+        print(alert_colour + " -- " + 
+              actual_name + "@" + 
+              user[-1:][0].split('.')[0][1:] + 
+              end_colour, end="")
 
