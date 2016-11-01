@@ -426,6 +426,7 @@ myStartupHook = do
   -- spawn "cvlc --video-wallpaper --no-audio --no-video-title-show --loop $HOME/.wall&"
   spawn "xsetroot -cursor_name left_ptr"
   spawn "emacs --daemon"
+  spawn "amixer -q set Master mute"
 
 
 ------------------------------------------------------------------------
