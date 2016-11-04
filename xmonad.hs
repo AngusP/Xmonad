@@ -31,6 +31,8 @@ import XMonad.Util.NamedScratchpad
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+import Data.String.Utils
+
 
 ------------------------------------------------------------------------
 -- Terminal
@@ -431,12 +433,12 @@ myStartupHook = do
 
 ------------------------------------------------------------------------
 -- Run xmonad with all the defaults we set up.
---
+-- 
 main = do
   xmproc <- spawnPipe "xmobar ~/.xmonad/xmobar.hs"
   xmonad $ defaults {
       logHook = dynamicLogWithPP $ xmobarPP {
-            ppOutput = hPutStrLn xmproc
+            ppOutput = hPutStrLn xmproc . replace "NSP " ""
           , ppTitle = xmobarColor xmobarTitleColor "" . shorten 100
           , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor ""
           , ppSep = "   "
