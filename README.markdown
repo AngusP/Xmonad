@@ -36,6 +36,8 @@ For source code, or to contribute, see the
 * [dmenu 4.0](http://tools.suckless.org/dmenu/)
 * [yeganesh 2.2](http://dmwit.com/yeganesh/)
 * [scrot 0.8](http://freshmeat.net/projects/scrot/)
+* Feh
+* MissingH (`cabal install MissingH`)
 
 ### Installing requirements on [Arch Linux](http://www.archlinux.org/)
 
