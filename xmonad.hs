@@ -424,7 +424,7 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 myStartupHook :: X ()
 myStartupHook = do
   spawn "xscreensaver &"
-  spawn "feh --bg-scale $HOME/.wall.jpg&"
+  spawn "feh --bg-fill $HOME/.wall.jpg&"
   -- spawn "cvlc --video-wallpaper --no-audio --no-video-title-show --loop $HOME/.wall&"
   spawn "xsetroot -cursor_name left_ptr"
   spawn "emacs --daemon"
