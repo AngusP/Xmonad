@@ -429,6 +429,7 @@ myStartupHook = do
   spawn "xsetroot -cursor_name left_ptr"
   spawn "emacs --daemon"
   spawn "amixer -q set Master mute"
+  spawn "$HOME/.xmonad/paranoid/paranoid_daemon.py&"
 
 
 ------------------------------------------------------------------------
