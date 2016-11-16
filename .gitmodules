@@ -1,0 +1,3 @@
+[submodule "paranoid"]
+	path = paranoid
+	url = git@github.com:jsren/.paranoid.git
