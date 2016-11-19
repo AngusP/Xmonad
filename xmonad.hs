@@ -43,7 +43,7 @@ myTerminal = "/usr/bin/gnome-terminal"
 
 scratchpads = [
   NS "term" "gnome-terminal --role=scratchpad" (role =? "scratchpad") (customFloating $ W.RationalRect (1/12) (1/12) (5/6) (5/6)),
-  NS "irc" "gnome-terminal --role=irc" (role =? "irc") (customFloating $ W.RationalRect (1/12) (1/12) (5/6) (5/6))]
+  NS "git" "gnome-terminal --role=scratchpad" (role =? "scratchpad") (customFloating $ W.RationalRect (1/12) (1/12) (5/6) (5/6))]
   where role = stringProperty "WM_WINDOW_ROLE"
 
 ------------------------------------------------------------------------
@@ -160,12 +160,16 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
      spawn "emacsclient -c -a emacs")
 
   -- Start Blender
-  , ((modMask, xK_b),
-     spawn "blender")
+  --, ((modMask, xK_b),
+  --   spawn "blender")
 
   -- Start GIMP
   , ((modMask, xK_g),
      spawn "gimp")
+
+  -- Start GitKraken
+  , ((modMask, xK_r),
+     spawn "gitkraken")
     
   -- Start Chrome Browser
   , ((modMask, xK_i),
@@ -176,8 +180,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
      spawn "vivaldi")
     
   -- Start KiCAD
-  , ((modMask, xK_c),
-     spawn "kicad")
+  --, ((modMask, xK_c),
+  --   spawn "kicad")
     
   -- Lock the screen using xscreensaver.
   , ((modMask .|. controlMask, xK_l),
@@ -185,7 +189,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   --   spawn "xscreensaver-command -lock")
 
 
-  -- show/hide scratchpad
+  -- show/hide scratchpads
   , ((0, xK_F1), namedScratchpadAction scratchpads "term")
 
     
