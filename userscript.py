@@ -5,10 +5,14 @@ import re
 
 selfname = subprocess.check_output(['whoami']).strip(" \n\r")
 users = []
+terms = 0
 
 for line in subprocess.check_output(['who']).split('\n'):
     if line != "":
         users.append(line.split())
+
+        if line[0:len(selfname)] != selfname:
+          terms += 1
 
 alert_colour = "<fc=#FF0000>"
 normal_colour = "<fc=#CCC>"
@@ -16,7 +20,7 @@ end_colour = "</fc>"
 
 finger_re = re.compile("(Name: )([a-zA-Z ]+)")
 
-print(normal_colour + " (" + str(len(users)) + ")" + end_colour, end="")
+print(normal_colour + " (" + str(terms) + ")" + end_colour, end="")
 for user in users:
     if user[0] == selfname:
         #print(normal_colour + " " + user[-1:][0] + end_colour + "    ", end="")
