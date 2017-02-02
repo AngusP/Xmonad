@@ -1,3 +1,6 @@
 [submodule "paranoid"]
 	path = paranoid
 	url = git@github.com:jsren/.paranoid.git
+[submodule "roll-of-a-dice"]
+	path = roll-of-a-dice
+	url = git://github.com/AngusP/roll-of-a-dice
