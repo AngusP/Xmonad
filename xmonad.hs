@@ -359,7 +359,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
   -- Quit xmonad.
   , ((modMask .|. shiftMask, xK_q),
-     io (exitWith ExitSuccess))
+     spawn "$HOME/road/VENV/bin/python $HOME/.xmonad/roll-of-a-dice/client.py logout http://wikid.tardis.ed.ac.uk $ROAD_API_KEY&"
+     >> io (exitWith ExitSuccess))
 
   -- Restart xmonad.
   , ((modMask, xK_q),
@@ -433,6 +434,7 @@ myStartupHook = do
   spawn "xsetroot -cursor_name left_ptr"
   spawn "emacs --daemon"
   spawn "amixer -q set Master mute"
+  spawn "$HOME/road/VENV/bin/python $HOME/.xmonad/roll-of-a-dice/client.py login http://wikid.tardis.ed.ac.uk $ROAD_API_KEY&"
   spawn "$HOME/.xmonad/paranoid/paranoid_daemon.py&"
 
 
