@@ -31,7 +31,7 @@ import XMonad.Util.NamedScratchpad
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
-import Data.String.Utils
+-- import Data.String.Utils
 
 
 ------------------------------------------------------------------------
@@ -69,6 +69,7 @@ myWorkspaces = map show [1..9]
 --
 myManageHook = composeAll
     [ resource  =? "desktop_window"   --> doIgnore
+    --, role =? "xmobar" --> doIgnore
     , name =? "File Operation Progress" --> doFloat
     , role =? "vlc-video"  --> (doF W.focusDown <+> doFullFloat)
     --, role =? "scratchpad" --> doFloat <+> manageScratchPad
@@ -80,13 +81,13 @@ myManageHook = composeAll
     role = stringProperty "WM_WINDOW_ROLE"
     name = stringProperty "WM_NAME"
 
---manageScratchPad :: ManageHook
---manageScratchPad = scratchpadManageHook (W.RationalRect l t w h)
---  where
---    h = 0.1     -- height, 10%
---    w = 1       -- width, 100%
---    t = 1 - h   -- distance from top edge, 90%
---    l = 1 - w   -- distance from left edge, 0%
+manageScratchPad :: ManageHook
+manageScratchPad = scratchpadManageHook (W.RationalRect l t w h)
+  where
+    h = 0.1     -- height, 10%
+    w = 1       -- width, 100%
+    t = 1 - h   -- distance from top edge, 90%
+    l = 1 - w   -- distance from left edge, 0%
 
 ------------------------------------------------------------------------
 -- Layouts
@@ -429,13 +430,11 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 myStartupHook :: X ()
 myStartupHook = do
   spawn "xscreensaver &"
-  spawn "feh --bg-fill $HOME/.wall.jpg&"
+  spawn "feh --bg-fill $HOME/.wall&"
   -- spawn "cvlc --video-wallpaper --no-audio --no-video-title-show --loop $HOME/.wall&"
   spawn "xsetroot -cursor_name left_ptr"
   spawn "emacs --daemon"
   spawn "amixer -q set Master mute"
-  spawn "$HOME/road/VENV/bin/python $HOME/.xmonad/roll-of-a-dice/client.py login http://wikid.tardis.ed.ac.uk $ROAD_API_KEY&"
-  spawn "$HOME/.xmonad/paranoid/paranoid_daemon.py&"
 
 
 ------------------------------------------------------------------------
@@ -445,13 +444,16 @@ main = do
   xmproc <- spawnPipe "xmobar ~/.xmonad/xmobar.hs"
   xmonad $ defaults {
       logHook = dynamicLogWithPP $ xmobarPP {
-            ppOutput = hPutStrLn xmproc . replace "NSP " ""
+            ppOutput = hPutStrLn xmproc-- . replace "NSP " ""
           , ppTitle = xmobarColor xmobarTitleColor "" . shorten 100
           , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor ""
           , ppSep = "   "
       }
       , manageHook = manageDocks <+> myManageHook <+> namedScratchpadManageHook scratchpads
       , startupHook = myStartupHook
+      , handleEventHook = mconcat
+                          [ docksEventHook
+                          , handleEventHook defaultConfig ]
 
   }
 
